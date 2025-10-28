@@ -7,6 +7,10 @@ let posts = [
   { id: 3, title: "post three" },
 ];
 
+const logger = (req,res,next)=>{
+  
+}
+
 router.get("/", (req, res) => {
   const limit = parseInt(req.query.limit);
   if (!isNaN(limit) && limit > 0) {
@@ -42,13 +46,23 @@ router.post("/", (req, res) => {
 })
 
 
-router.put("/:id",(req,res)=>{
+router.put("/:id", (req, res) => {
   const id = parseInt(req.params.id);
-  const post = posts.find((post)=> post.id=== id);
-  if(!post){
-    return res.status(404).json({msg: "post with id not found"})
+  const post = posts.find((post) => post.id === id);
+  if (!post) {
+    return res.status(404).json({ msg: "post with id not found" })
   }
   post.title = req.body.title;
+  res.status(200).json(posts);
+})
+
+router.delete("/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const post = posts.find((post) => post.id === id);
+  if (!post) {
+    return res.status(404).json({ msg: "post with id not found" })
+  }
+  posts = posts.filter((post)=> post.id !==id);
   res.status(200).json(posts);
 })
 
