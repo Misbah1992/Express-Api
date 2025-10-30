@@ -7,7 +7,7 @@ let posts = [
   { id: 3, title: "post three" },
 ];
 
-
+// get posts
 router.get("/", (req, res) => {
   const limit = parseInt(req.query.limit);
   if (!isNaN(limit) && limit > 0) {
@@ -17,18 +17,20 @@ router.get("/", (req, res) => {
     res.status(200).json(posts);
   }
 })
-
-router.get("/:id", (req, res) => {
+// get single post
+router.get("/:id", (req, res, next) => {
   const id = parseInt(req.params.id);
   const post = posts.find((post) => post.id === id);
   if (!post) {
-    res.status(404).json({ msg: `a post id the id of ${id} not found` })
+   const error = new Error(`a post id the id of ${id} not found`);
+   return next(error);
   }
   else {
     res.status(200).json(post);
   }
 })
 
+// create new post
 router.post("/", (req, res) => {
   const newPost = {
     id: posts.length + 1,
@@ -42,7 +44,7 @@ router.post("/", (req, res) => {
   res.status(201).json(posts);
 })
 
-
+// edit a post
 router.put("/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const post = posts.find((post) => post.id === id);
@@ -53,6 +55,7 @@ router.put("/:id", (req, res) => {
   res.status(200).json(posts);
 })
 
+// delete a post
 router.delete("/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const post = posts.find((post) => post.id === id);
